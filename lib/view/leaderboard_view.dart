@@ -26,7 +26,6 @@ class LeaderboardView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Seungho Jang', style: tt.titleMedium),
-                    const SizedBox(height: 4),
                     Text('235 Picked Up', style: tt.bodyMedium),
                   ],
                 )
@@ -34,6 +33,16 @@ class LeaderboardView extends StatelessWidget {
             ),
           ),
         ),
+      );
+    }
+
+    Widget getMyLeaderboard() {
+      return Row(
+        children: [
+          Text('35', style: tt.headlineLarge),
+          const SizedBox(width: 32),
+          buildCard(),
+        ],
       );
     }
 
@@ -72,16 +81,7 @@ class LeaderboardView extends StatelessWidget {
                   style: tt.bodyLarge,
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Text(
-                      '35',
-                      style: tt.headlineLarge,
-                    ),
-                    const SizedBox(width: 32),
-                    buildCard(),
-                  ],
-                ),
+                getMyLeaderboard(),
                 const SizedBox(height: 16),
                 Text(
                   'Global Leaderboard',

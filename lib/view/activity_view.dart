@@ -10,14 +10,8 @@ class ActivityView extends StatelessWidget {
 
     List<Widget> getText() {
       return [
-        Text(
-          'JUN 2023',
-          style: tt.bodyLarge,
-        ),
-        Text(
-          '1 Plogging, 3 Picked Up',
-          style: tt.bodySmall,
-        ),
+        Text('JUN 2023', style: tt.bodyLarge),
+        Text('1 Plogging, 3 Picked Up', style: tt.bodySmall),
       ];
     }
 
@@ -40,7 +34,6 @@ class ActivityView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('2023. 06. 17.', style: tt.titleMedium),
-                      const SizedBox(height: 4),
                       Text('Saturday Morning Run', style: tt.bodyMedium),
                     ],
                   )
