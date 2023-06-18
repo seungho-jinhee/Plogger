@@ -7,6 +7,7 @@ class PloggingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme cs = Theme.of(context).colorScheme;
     TextTheme tt = Theme.of(context).textTheme;
 
     return Padding(
@@ -25,13 +26,21 @@ class PloggingView extends StatelessWidget {
               future: Future(() => Geolocator.getCurrentPosition()),
               builder: (context, snapshot) {
                 return snapshot.hasData
-                    ? GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
-                            snapshot.data!.latitude,
-                            snapshot.data!.longitude,
+                    // ? GoogleMap(
+                    //     initialCameraPosition: CameraPosition(
+                    //       target: LatLng(
+                    //         snapshot.data!.latitude,
+                    //         snapshot.data!.longitude,
+                    //       ),
+                    //       zoom: 17,
+                    //     ),
+                    //   )
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: cs.primaryContainer,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(16),
                           ),
-                          zoom: 17,
                         ),
                       )
                     : const Center(

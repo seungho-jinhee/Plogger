@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plogger/view/plogging_view.dart';
 
 class PloggingMapView extends StatelessWidget {
   const PloggingMapView({super.key});
@@ -17,9 +18,11 @@ class PloggingMapView extends StatelessWidget {
     }
 
     return Scaffold(
-      body: const Center(
-        child: Text('Map'),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Map'),
       ),
+      body: const PloggingView(),
       floatingActionButton: buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
