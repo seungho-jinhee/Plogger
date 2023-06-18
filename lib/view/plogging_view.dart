@@ -7,7 +7,6 @@ class PloggingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme cs = Theme.of(context).colorScheme;
     TextTheme tt = Theme.of(context).textTheme;
 
     return Padding(
@@ -24,25 +23,25 @@ class PloggingView extends StatelessWidget {
           Expanded(
             child: FutureBuilder<Position>(
               future: Future(() => Geolocator.getCurrentPosition()),
-              builder: (context, snapshot) {
+              builder: (_, snapshot) {
                 return snapshot.hasData
-                    // ? GoogleMap(
-                    //     initialCameraPosition: CameraPosition(
-                    //       target: LatLng(
-                    //         snapshot.data!.latitude,
-                    //         snapshot.data!.longitude,
-                    //       ),
-                    //       zoom: 17,
-                    //     ),
-                    //   )
-                    ? Container(
-                        decoration: BoxDecoration(
-                          color: cs.primaryContainer,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(16),
+                    ? GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                            snapshot.data!.latitude,
+                            snapshot.data!.longitude,
                           ),
+                          zoom: 17,
                         ),
                       )
+                    // ? Container(
+                    //     decoration: BoxDecoration(
+                    //       color: cs.primaryContainer,
+                    //       borderRadius: const BorderRadius.all(
+                    //         Radius.circular(16),
+                    //       ),
+                    //     ),
+                    //   )
                     : const Center(
                         child: CircularProgressIndicator(),
                       );

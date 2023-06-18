@@ -36,4 +36,7 @@ Future<void> _requestPermission() async {
   if (!(await Permission.location.status).isGranted) {
     await Permission.location.request();
   }
+  if (!(await Permission.camera.status).isGranted) {
+    await Permission.camera.request();
+  }
 }

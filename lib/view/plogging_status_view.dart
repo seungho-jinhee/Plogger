@@ -3,8 +3,31 @@ import 'package:flutter/services.dart';
 import 'package:plogger/view/plogging_camera_view.dart';
 import 'package:plogger/view/plogging_map_view.dart';
 
-class PloggingStatusView extends StatelessWidget {
+class PloggingStatusView extends StatefulWidget {
   const PloggingStatusView({super.key});
+
+  @override
+  State<PloggingStatusView> createState() => _PloggingStatusViewState();
+}
+
+class _PloggingStatusViewState extends State<PloggingStatusView>
+    with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+      duration: const Duration(seconds: 4),
+      vsync: this,
+    );
+    animation = Tween<double>(begin: 0, end: 4).animate(animationController)
+      ..addListener(() {
+        setState(() {});
+      });
+    animationController.forward();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +45,7 @@ class PloggingStatusView extends StatelessWidget {
 
     Widget buildStatus() {
       return Padding(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
         child: Column(
           children: [
             Row(
@@ -201,8 +224,10 @@ class PloggingStatusView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton.outlined(
-                onPressed: () =>
-                    Navigator.push(context, buildPloggingMapViewRoute()),
+                onPressed: () => Navigator.push(
+                  context,
+                  buildPloggingMapViewRoute(),
+                ),
                 icon: Icon(
                   Icons.map_outlined,
                   color: cs.onPrimary,
@@ -212,8 +237,10 @@ class PloggingStatusView extends StatelessWidget {
                 width: 160,
               ),
               IconButton.outlined(
-                onPressed: () =>
-                    Navigator.push(context, buildPloggingCameraViewRoute()),
+                onPressed: () => Navigator.push(
+                  context,
+                  buildPloggingCameraViewRoute(),
+                ),
                 icon: Icon(
                   Icons.camera_alt_outlined,
                   color: cs.onPrimary,
@@ -228,26 +255,67 @@ class PloggingStatusView extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      backgroundColor: cs.primary,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Plogging'),
+    String getCountdown() {
+      double cd = animation.value;
+
+      if (cd < 1) {
+        return '3';
+      } else if (cd < 2) {
+        return '2';
+      } else if (cd < 3) {
+        return '1';
+      } else {
+        return 'PLOG!';
+      }
+    }
+
+    Widget buildAnimation() {
+      return Scaffold(
         backgroundColor: cs.primary,
-        foregroundColor: cs.onPrimary,
-        systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text('Plogging'),
+          backgroundColor: cs.primary,
+          foregroundColor: cs.onPrimary,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
         ),
-      ),
-      body: Stack(
-        children: [
-          buildStatus(),
-          buildIconButtons(),
-        ],
-      ),
-      floatingActionButton: buildFloatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
+        body: Center(
+          child: Text(
+            getCountdown(),
+            style: tt.displayLarge
+                ?.copyWith(color: cs.onPrimary, fontWeight: FontWeight.bold),
+          ),
+        ),
+      );
+    }
+
+    Widget buildScaffold() {
+      return Scaffold(
+        backgroundColor: cs.primary,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text('Plogging'),
+          backgroundColor: cs.primary,
+          foregroundColor: cs.onPrimary,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          ),
+        ),
+        body: Stack(
+          children: [
+            buildStatus(),
+            buildIconButtons(),
+          ],
+        ),
+        floatingActionButton: buildFloatingActionButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      );
+    }
+
+    return animation.value < 4 ? buildAnimation() : buildScaffold();
   }
 }
