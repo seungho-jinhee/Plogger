@@ -5,8 +5,21 @@ class LeaderboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Leaderboard'),
+    return TabBarView(
+      children: <Widget>[
+        Center(
+          child: Text('Total'),
+        ),
+        Center(
+          child: Text('Plastic'),
+        ),
+        Center(
+          child: Text('Glass'),
+        ),
+        Center(
+          child: Text('Metal'),
+        ),
+      ],
     );
   }
 }

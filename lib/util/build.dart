@@ -3,14 +3,37 @@ import 'package:plogger/view/profile_view.dart';
 import 'package:plogger/view/setting_view.dart';
 
 class BuildAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final bool pushed; // is pushed by navigator?
+  final bool pushed;
+  final bool tabBar;
   final String title;
 
   const BuildAppBar({
     super.key,
-    required this.pushed,
+    this.pushed = false,
+    this.tabBar = false,
     required this.title,
   });
+
+  PreferredSizeWidget? buildTabBar() {
+    return tabBar
+        ? const TabBar(
+            tabs: <Widget>[
+              Tab(
+                text: 'Total',
+              ),
+              Tab(
+                text: 'Plastic',
+              ),
+              Tab(
+                text: 'Glass',
+              ),
+              Tab(
+                text: 'Metal',
+              ),
+            ],
+          )
+        : null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +60,7 @@ class BuildAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: const Icon(Icons.settings),
           ),
         ],
+        bottom: buildTabBar(),
       );
     }
   }

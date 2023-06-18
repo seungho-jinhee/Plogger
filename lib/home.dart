@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
     }
 
     PreferredSizeWidget buildAppBar() {
-      return BuildAppBar(pushed: false, title: getTitle());
+      return BuildAppBar(tabBar: _selectedIndex == 0, title: getTitle());
     }
 
     Widget buildBody() {
@@ -109,12 +109,15 @@ class _HomeState extends State<Home> {
           : null;
     }
 
-    return Scaffold(
-      appBar: buildAppBar(),
-      body: buildBody(),
-      bottomNavigationBar: buildBottomNavigationBar(),
-      floatingActionButton: buildFloatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: buildAppBar(),
+        body: buildBody(),
+        bottomNavigationBar: buildBottomNavigationBar(),
+        floatingActionButton: buildFloatingActionButton(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      ),
     );
   }
 }

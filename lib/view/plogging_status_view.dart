@@ -87,6 +87,9 @@ class PloggingStatusView extends StatelessWidget {
       backgroundColor: cs.primary,
       body: Stack(
         children: [
+          const Center(
+            child: Text('Status'),
+          ),
           buildIconButtons(),
         ],
       ),
