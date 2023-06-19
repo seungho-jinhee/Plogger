@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "940909690947",
+    "project_id": "plogger-0235",
+    "storage_bucket": "plogger-0235.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940909690947:android:9e1f5aa48c1e3cddc294f6",
+        "android_client_info": {
+          "package_name": "com.develop0235.plogger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940909690947-hk9lek4jqqj79shd1c8lur4cl23gne4a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.develop0235.plogger",
+            "certificate_hash": "7092fd642fc989ab75a83aac3d800149c22db3e7"
+          }
+        },
+        {
+          "client_id": "940909690947-rr34ahiq3pmq7psluulvl1vuck33o8l8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD89evkfVabfX5zwL_hwO-WHNtQ5_arB2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940909690947-rr34ahiq3pmq7psluulvl1vuck33o8l8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

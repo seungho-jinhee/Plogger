@@ -22,10 +22,6 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
   late Animation<double> animation;
   late AnimationController animationController;
 
-  // double d2xdt2 = 0;
-  // double d2ydt2 = 0;
-  // double d2zdt2 = 0;
-
   Route buildPloggingMapViewRoute() {
     return PageRouteBuilder(
       pageBuilder: (_, __, ___) => const PloggingMapView(),
@@ -96,33 +92,6 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
         });
       },
     );
-
-    // Future.delayed(const Duration(seconds: 3)).then(
-    //   (_) {
-    //     ploggingModel = PloggingModel();
-    //     userAccelerometerEvents.listen((event) {
-    //       d2xdt2 += event.x;
-    //       d2ydt2 += event.y;
-    //       d2zdt2 += event.z;
-    //     });
-    //     Timer.periodic(
-    //       const Duration(seconds: 1),
-    //       (_) {
-    //         setState(() {
-    //           ploggingModel.update(
-    //             d2xdt2 > 1 || -1 > d2xdt2 ? d2xdt2 : 0,
-    //             d2ydt2 > 1 || -1 > d2ydt2 ? d2ydt2 : 0,
-    //             d2zdt2 > 1 || -1 > d2zdt2 ? d2zdt2 : 0,
-    //           );
-
-    //           d2xdt2 = 0;
-    //           d2ydt2 = 0;
-    //           d2zdt2 = 0;
-    //         });
-    //       },
-    //     );
-    //   },
-    // );
   }
 
   @override
