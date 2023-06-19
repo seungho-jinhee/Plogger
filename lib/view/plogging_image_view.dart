@@ -33,56 +33,78 @@ class PloggingImageView extends StatelessWidget {
         future: Future(() => RoboflowController.detect(imagePath)),
         builder: (_, snapshot) {
           if (snapshot.hasData) {
-            dynamic image = snapshot.data!['image'];
-            dynamic prediction = snapshot.data!['predictions'][0];
-            type = prediction['class'];
+            // dynamic image = snapshot.data!['image'];
+            if (snapshot.data!['predictions'].isNotEmpty) {
+              dynamic prediction = snapshot.data!['predictions'][0];
+              type = prediction['class'];
 
-            return Center(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Image.file(File(imagePath)),
-                  SizedBox(
-                    width: double.parse(image['width'].toString()),
-                    height: double.parse(image['height'].toString()),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        left: (prediction['x'] - (prediction['width'] / 2)) / 2,
-                        top: (prediction['y'] - (prediction['height'] / 2)) / 2,
-                        right: (double.parse(image['width'].toString()) -
-                                (prediction['x'] + (prediction['width'] / 2))) /
-                            2,
-                        bottom: (double.parse(image['height'].toString()) -
-                                (prediction['y'] +
-                                    (prediction['height'] / 2))) /
-                            2,
-                      ),
-                      child: Card(
-                        color: Colors.transparent,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            width: 2,
-                            color: cs.primary,
-                          ),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(12)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            '${prediction['class']} (${double.parse((prediction['confidence'] * 100).toString()).toInt()}%)',
-                            style: tt.labelLarge?.copyWith(
-                              color: cs.primary,
-                            ),
-                          ),
-                        ),
-                      ),
+              return Center(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image.file(File(imagePath)),
+                    Text(
+                      '${prediction['class']} (${double.parse((prediction['confidence'] * 100).toString()).toInt()}%)',
+                      style: tt.displaySmall?.copyWith(color: cs.primary),
                     ),
-                  ),
-                ],
-              ),
-            );
+                    // SizedBox(
+                    //   width: double.parse(image['width'].toString()),
+                    //   height: double.parse(image['height'].toString()),
+                    //   child: Padding(
+                    //     padding: EdgeInsets.only(
+                    //       left:
+                    //           (prediction['x'] - (prediction['width'] / 2)) / 2,
+                    //       top: (prediction['y'] - (prediction['height'] / 2)) /
+                    //           2,
+                    //       right: (double.parse(image['width'].toString()) -
+                    //               (prediction['x'] +
+                    //                   (prediction['width'] / 2))) /
+                    //           2,
+                    //       bottom: (double.parse(image['height'].toString()) -
+                    //               (prediction['y'] +
+                    //                   (prediction['height'] / 2))) /
+                    //           2,
+                    //     ),
+                    //     child: Card(
+                    //       color: Colors.transparent,
+                    //       elevation: 0,
+                    //       shape: RoundedRectangleBorder(
+                    //         side: BorderSide(
+                    //           width: 2,
+                    //           color: cs.primary,
+                    //         ),
+                    //         borderRadius:
+                    //             const BorderRadius.all(Radius.circular(12)),
+                    //       ),
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.all(16),
+                    //         child: Text(
+                    //           '${prediction['class']} (${double.parse((prediction['confidence'] * 100).toString()).toInt()}%)',
+                    //           style: tt.labelLarge?.copyWith(
+                    //             color: cs.primary,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              );
+            } else {
+              return Center(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image.file(File(imagePath)),
+                    Text(
+                      'Try Again',
+                      style: tt.displaySmall?.copyWith(color: cs.error),
+                    ),
+                  ],
+                ),
+              );
+            }
           } else {
             return Center(
               child: Stack(

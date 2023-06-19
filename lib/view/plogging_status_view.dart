@@ -1,8 +1,13 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pedometer/pedometer.dart';
 import 'package:plogger/model/plogging_model.dart';
+import 'package:plogger/util/constant.dart';
 import 'package:plogger/view/plogging_camera_view.dart';
 import 'package:plogger/view/plogging_map_view.dart';
+import 'package:sensors_plus/sensors_plus.dart';
+import 'package:vibration/vibration.dart';
 
 class PloggingStatusView extends StatefulWidget {
   const PloggingStatusView({super.key});
@@ -17,10 +22,43 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
   late Animation<double> animation;
   late AnimationController animationController;
 
+  // double d2xdt2 = 0;
+  // double d2ydt2 = 0;
+  // double d2zdt2 = 0;
+
+  Route buildPloggingMapViewRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (_, __, ___) => const PloggingMapView(),
+      transitionsBuilder: (_, animation, __, child) {
+        const begin = Offset(-1.0, 0.0);
+        const end = Offset.zero;
+        final curveTween = CurveTween(curve: Curves.ease);
+        final tween = Tween(begin: begin, end: end).chain(curveTween);
+        final offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
+  }
+
+  Route<String> buildPloggingCameraViewRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (_, __, ___) => const PloggingCameraView(),
+      transitionsBuilder: (_, animation, __, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        final curveTween = CurveTween(curve: Curves.ease);
+        final tween = Tween(begin: begin, end: end).chain(curveTween);
+        final offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    ploggingModel = PloggingModel();
     animationController = AnimationController(
       duration: const Duration(seconds: 4),
       vsync: this,
@@ -30,6 +68,61 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
         setState(() {});
       });
     animationController.forward();
+
+    Future.delayed(const Duration(seconds: 3)).then(
+      (_) {
+        ploggingModel = PloggingModel();
+        Pedometer.stepCountStream.listen((event) {
+          ploggingModel.steps += 1;
+        });
+        gyroscopeEvents.listen((event) async {
+          if (event.x < GYROSCOPE_EVENTS_THRESHOLD) {
+            Vibration.vibrate();
+
+            String? type = await Navigator.push(
+              context,
+              buildPloggingCameraViewRoute(),
+            );
+
+            if (type != null) {
+              setState(() => ploggingModel.updatePickedUp(type));
+            }
+          }
+        });
+        Timer.periodic(const Duration(seconds: 1), (_) {
+          setState(() {
+            ploggingModel.time += 1;
+          });
+        });
+      },
+    );
+
+    // Future.delayed(const Duration(seconds: 3)).then(
+    //   (_) {
+    //     ploggingModel = PloggingModel();
+    //     userAccelerometerEvents.listen((event) {
+    //       d2xdt2 += event.x;
+    //       d2ydt2 += event.y;
+    //       d2zdt2 += event.z;
+    //     });
+    //     Timer.periodic(
+    //       const Duration(seconds: 1),
+    //       (_) {
+    //         setState(() {
+    //           ploggingModel.update(
+    //             d2xdt2 > 1 || -1 > d2xdt2 ? d2xdt2 : 0,
+    //             d2ydt2 > 1 || -1 > d2ydt2 ? d2ydt2 : 0,
+    //             d2zdt2 > 1 || -1 > d2zdt2 ? d2zdt2 : 0,
+    //           );
+
+    //           d2xdt2 = 0;
+    //           d2ydt2 = 0;
+    //           d2zdt2 = 0;
+    //         });
+    //       },
+    //     );
+    //   },
+    // );
   }
 
   @override
@@ -39,7 +132,11 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
 
     Widget buildFloatingActionButton() {
       return FloatingActionButton.large(
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          Pedometer.pedestrianStatusStream.drain();
+          gyroscopeEvents.drain();
+          Navigator.pop(context);
+        },
         backgroundColor: cs.onPrimary,
         foregroundColor: cs.primary,
         child: const Icon(Icons.stop),
@@ -104,7 +201,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${ploggingModel.km}',
+                      ploggingModel.km.toStringAsFixed(2),
                       style: tt.headlineLarge?.copyWith(
                         color: cs.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -186,36 +283,6 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
             ),
           ],
         ),
-      );
-    }
-
-    Route buildPloggingMapViewRoute() {
-      return PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const PloggingMapView(),
-        transitionsBuilder: (_, animation, __, child) {
-          const begin = Offset(-1.0, 0.0);
-          const end = Offset.zero;
-          final curveTween = CurveTween(curve: Curves.ease);
-          final tween = Tween(begin: begin, end: end).chain(curveTween);
-          final offsetAnimation = animation.drive(tween);
-
-          return SlideTransition(position: offsetAnimation, child: child);
-        },
-      );
-    }
-
-    Route<String> buildPloggingCameraViewRoute() {
-      return PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const PloggingCameraView(),
-        transitionsBuilder: (_, animation, __, child) {
-          const begin = Offset(1.0, 0.0);
-          const end = Offset.zero;
-          final curveTween = CurveTween(curve: Curves.ease);
-          final tween = Tween(begin: begin, end: end).chain(curveTween);
-          final offsetAnimation = animation.drive(tween);
-
-          return SlideTransition(position: offsetAnimation, child: child);
-        },
       );
     }
 

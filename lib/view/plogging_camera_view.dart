@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:plogger/util/build.dart';
 import 'package:plogger/view/plogging_image_view.dart';
+import 'package:vibration/vibration.dart';
 
 class PloggingCameraView extends StatelessWidget {
   const PloggingCameraView({super.key});
@@ -29,6 +30,7 @@ class PloggingCameraView extends StatelessWidget {
     Widget buildFloatingActionButton() {
       return FloatingActionButton.large(
         onPressed: () async {
+          Vibration.vibrate();
           XFile image = await cameraController.takePicture();
           // ignore: use_build_context_synchronously
           Navigator.push(context, buildPloggingImageViewRoute(image.path));

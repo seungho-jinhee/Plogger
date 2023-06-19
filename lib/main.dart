@@ -39,4 +39,7 @@ Future<void> _requestPermission() async {
   if (!(await Permission.camera.status).isGranted) {
     await Permission.camera.request();
   }
+  if (!(await Permission.activityRecognition.status).isGranted) {
+    await Permission.activityRecognition.request();
+  }
 }
