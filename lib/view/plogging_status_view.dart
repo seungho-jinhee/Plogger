@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:plogger/model/plogging_model.dart';
 import 'package:plogger/view/plogging_camera_view.dart';
 import 'package:plogger/view/plogging_map_view.dart';
 
@@ -12,12 +13,14 @@ class PloggingStatusView extends StatefulWidget {
 
 class _PloggingStatusViewState extends State<PloggingStatusView>
     with SingleTickerProviderStateMixin {
+  late PloggingModel ploggingModel;
   late Animation<double> animation;
   late AnimationController animationController;
 
   @override
   void initState() {
     super.initState();
+    ploggingModel = PloggingModel();
     animationController = AnimationController(
       duration: const Duration(seconds: 4),
       vsync: this,
@@ -56,7 +59,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
                     Image.asset('assets/bottle.png', width: 48, height: 48),
                     const SizedBox(height: 4),
                     Text(
-                      '2 Plastic',
+                      '${ploggingModel.plastic} Plastic',
                       style: tt.labelLarge?.copyWith(color: cs.onPrimary),
                     )
                   ],
@@ -66,7 +69,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
                     Image.asset('assets/glass.png', width: 48, height: 48),
                     const SizedBox(height: 4),
                     Text(
-                      '3 Glass',
+                      '${ploggingModel.glass} Glass',
                       style: tt.labelLarge?.copyWith(color: cs.onPrimary),
                     )
                   ],
@@ -76,7 +79,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
                     Image.asset('assets/can.png', width: 48, height: 48),
                     const SizedBox(height: 4),
                     Text(
-                      '5 Metal',
+                      '${ploggingModel.metal} Metal',
                       style: tt.labelLarge?.copyWith(color: cs.onPrimary),
                     )
                   ],
@@ -86,7 +89,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
                     Image.asset('assets/trash.png', width: 48, height: 48),
                     const SizedBox(height: 4),
                     Text(
-                      '0 Trash',
+                      '${ploggingModel.trash} Trash',
                       style: tt.labelLarge?.copyWith(color: cs.onPrimary),
                     )
                   ],
@@ -101,7 +104,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '2.35',
+                      '${ploggingModel.km}',
                       style: tt.headlineLarge?.copyWith(
                         color: cs.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -120,7 +123,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '12\'18\'\'',
+                      '${ploggingModel.averagePace ~/ 60}\'${ploggingModel.averagePace % 60}\'\'',
                       style: tt.headlineLarge?.copyWith(
                         color: cs.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -145,7 +148,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '28:54',
+                      '${ploggingModel.time ~/ 60}:${ploggingModel.time % 60}',
                       style: tt.headlineLarge?.copyWith(
                         color: cs.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -164,7 +167,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '10',
+                      '${ploggingModel.pickedUp}',
                       style: tt.headlineLarge?.copyWith(
                         color: cs.onPrimary,
                         fontWeight: FontWeight.bold,
@@ -201,7 +204,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
       );
     }
 
-    Route buildPloggingCameraViewRoute() {
+    Route<String> buildPloggingCameraViewRoute() {
       return PageRouteBuilder(
         pageBuilder: (_, __, ___) => const PloggingCameraView(),
         transitionsBuilder: (_, animation, __, child) {
@@ -224,10 +227,12 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton.outlined(
-                onPressed: () => Navigator.push(
-                  context,
-                  buildPloggingMapViewRoute(),
-                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    buildPloggingMapViewRoute(),
+                  );
+                },
                 icon: Icon(
                   Icons.map_outlined,
                   color: cs.onPrimary,
@@ -237,10 +242,16 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
                 width: 160,
               ),
               IconButton.outlined(
-                onPressed: () => Navigator.push(
-                  context,
-                  buildPloggingCameraViewRoute(),
-                ),
+                onPressed: () async {
+                  String? type = await Navigator.push(
+                    context,
+                    buildPloggingCameraViewRoute(),
+                  );
+
+                  if (type != null) {
+                    setState(() => ploggingModel.updatePickedUp(type));
+                  }
+                },
                 icon: Icon(
                   Icons.camera_alt_outlined,
                   color: cs.onPrimary,
