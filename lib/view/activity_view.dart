@@ -10,10 +10,17 @@ class ActivityView extends StatelessWidget {
     ColorScheme cs = Theme.of(context).colorScheme;
     TextTheme tt = Theme.of(context).textTheme;
 
-    List<Widget> getText() {
+    List<Widget> getText(List<PloggingModel> ploggingModels) {
+      int pickedUp = List.generate(
+        ploggingModels.length,
+        (index) => ploggingModels[index].pickedUp,
+      ).fold(0, (a, b) => a + b);
       return [
         Text('JUN 2023', style: tt.bodyLarge),
-        Text('1 Plogging, 3 Picked Up', style: tt.bodySmall),
+        Text(
+          '${ploggingModels.length} Plogging, $pickedUp Picked Up',
+          style: tt.bodySmall,
+        ),
       ];
     }
 
@@ -124,7 +131,7 @@ class ActivityView extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ...getText(),
+                    ...getText(ploggingModels),
                     const SizedBox(height: 16),
                     ...List.generate(
                       ploggingModels.length,

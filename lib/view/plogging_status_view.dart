@@ -333,7 +333,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
         );
       } else {
         return Text(
-          'PLOG',
+          'PLOGGING\nTOGETHER!',
           style: tt.displaySmall?.copyWith(
             color: cs.onPrimary,
             fontWeight: FontWeight.bold,
