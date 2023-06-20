@@ -21,8 +21,7 @@ class ProfileView extends StatelessWidget {
             const CircleAvatar(radius: 64),
             const SizedBox(height: 16),
             Text(
-              (FirebaseAuth.instance.currentUser!.displayName ?? 'Guest')
-                  .toString(),
+              FirebaseAuth.instance.currentUser!.email.toString().split('@')[0],
               style: tt.headlineSmall?.copyWith(color: cs.onSurface),
             ),
             Text(

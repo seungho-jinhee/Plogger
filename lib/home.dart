@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:plogger/controller/file_controller.dart';
+import 'package:plogger/model/plogging_model.dart';
 import 'package:plogger/util/build.dart';
 import 'package:plogger/view/activity_view.dart';
 import 'package:plogger/view/leaderboard_view.dart';
@@ -100,8 +102,14 @@ class _HomeState extends State<Home> {
 
       return _selectedIndex == 1
           ? FloatingActionButton.large(
-              onPressed: () =>
-                  Navigator.push(context, buildPloggingStatusViewRoute()),
+              onPressed: () async {
+                PloggingModel ploggingModel = await Navigator.push(
+                  context,
+                  buildPloggingStatusViewRoute(),
+                );
+
+                await FileController.fileWriteAsString(ploggingModel.toSTR());
+              },
               backgroundColor: cs.primary,
               foregroundColor: cs.onPrimary,
               child: const Icon(Icons.play_arrow),

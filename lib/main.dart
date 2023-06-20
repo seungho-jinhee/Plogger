@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:plogger/controller/file_controller.dart';
 import 'package:plogger/firebase_options.dart';
 import 'package:plogger/home.dart';
 import 'package:plogger/view/login_view.dart';
@@ -11,6 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await _requestPermission();
+  await FileController.init();
 
   runApp(const MainApp());
 }
@@ -48,5 +50,8 @@ Future<void> _requestPermission() async {
   }
   if (!(await Permission.activityRecognition.status).isGranted) {
     await Permission.activityRecognition.request();
+  }
+  if (!(await Permission.storage.status).isGranted) {
+    await Permission.storage.request();
   }
 }

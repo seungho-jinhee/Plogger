@@ -67,7 +67,9 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
 
     Future.delayed(const Duration(seconds: 3)).then(
       (_) {
-        ploggingModel = PloggingModel();
+        ploggingModel = PloggingModel(
+          datetime: DateTime.now().toIso8601String().substring(0, 19),
+        );
         Pedometer.stepCountStream.listen((event) {
           ploggingModel.steps += 1;
         });
@@ -104,7 +106,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
         onPressed: () {
           Pedometer.pedestrianStatusStream.drain();
           gyroscopeEvents.drain();
-          Navigator.pop(context);
+          Navigator.pop(context, ploggingModel);
         },
         backgroundColor: cs.onPrimary,
         foregroundColor: cs.primary,
@@ -302,17 +304,41 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
       );
     }
 
-    String getCountdown() {
+    Widget getCountdown() {
       double cd = animation.value;
 
       if (cd < 1) {
-        return '3';
+        return Text(
+          '3',
+          style: tt.displayLarge?.copyWith(
+            color: cs.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        );
       } else if (cd < 2) {
-        return '2';
+        return Text(
+          '2',
+          style: tt.displayLarge?.copyWith(
+            color: cs.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        );
       } else if (cd < 3) {
-        return '1';
+        return Text(
+          '1',
+          style: tt.displayLarge?.copyWith(
+            color: cs.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        );
       } else {
-        return 'PLOG!';
+        return Text(
+          'PLOG',
+          style: tt.displaySmall?.copyWith(
+            color: cs.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        );
       }
     }
 
@@ -330,11 +356,7 @@ class _PloggingStatusViewState extends State<PloggingStatusView>
           ),
         ),
         body: Center(
-          child: Text(
-            getCountdown(),
-            style: tt.displayLarge
-                ?.copyWith(color: cs.onPrimary, fontWeight: FontWeight.bold),
-          ),
+          child: getCountdown(),
         ),
       );
     }

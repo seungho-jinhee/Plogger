@@ -16,7 +16,7 @@ class PloggingView extends StatelessWidget {
         children: [
           Text('Daejeon, South Korea', style: tt.bodyLarge),
           Text(
-            'Korea Advanced Institute of Science and Technology E3-1',
+            'Korea Advanced Institute of Science and Technology N7',
             style: tt.bodySmall,
           ),
           const SizedBox(height: 16),
